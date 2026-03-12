@@ -3,94 +3,263 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Loyslow Dev</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>loyslow — Developer</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Devicon -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.16.0/devicon.min.css">
+
+    <!-- CSS Modules -->
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/preloader.css">
+    <link rel="stylesheet" href="css/background.css">
+    <link rel="stylesheet" href="css/bio.css">
+    <link rel="stylesheet" href="css/tech.css">
+    <link rel="stylesheet" href="css/repos.css">
+    <link rel="stylesheet" href="css/projects.css">
+    <link rel="stylesheet" href="css/player.css">
+    <link rel="stylesheet" href="css/animations.css">
 </head>
 <body>
 
-    <div id="overlay">
-        <div class="overlay-content">
-            <!-- Анимированное кольцо загрузки -->
-            <div class="loader-ring"></div>
-            <h1>LOYSLLOW DEV</h1>
-            <p>Нажмите в любом месте, чтобы продолжить</p>
+    <!-- ============ PRELOADER ============ -->
+    <div id="preloader">
+        <div class="preloader-content">
+            <div class="preloader-glitch" data-text="loyslow">loyslow</div>
+            <div class="preloader-subtitle">developer portfolio</div>
+            <div class="preloader-line"></div>
+            <div class="preloader-click">
+                <span class="preloader-pulse"></span>
+                Нажмите в любом месте, чтобы продолжить
+            </div>
+            <div class="preloader-hint">🎵 Музыка начнёт воспроизводиться автоматически</div>
         </div>
+        <div class="preloader-particles" id="preloaderParticles"></div>
     </div>
 
-    <!-- Фон -->
-    <canvas id="space-canvas"></canvas>
-
-    <div class="container">
-        <div class="bento-grid">
-            
-            <!-- BIO -->
-            <div class="card bio-card" id="bio-card">
-                <div class="loader"><i class="fa-solid fa-circle-notch fa-spin"></i> Loading Bio...</div>
-            </div>
-
-            <!-- Stack -->
-            <div class="card tech-card">
-                <h3>Stack</h3>
-                <div class="marquee-container">
-                    <div class="marquee" id="tech-track"></div>
-                </div>
-            </div>
-
-            <!-- Repos -->
-            <div class="card repos-card">
-                <h3>GitHub Repositories</h3>
-                <div class="repos-list" id="repos-list">
-                    <div class="loader"><i class="fa-solid fa-circle-notch fa-spin"></i> Loading...</div>
-                </div>
-            </div>
-
-            <!-- Projects -->
-            <div class="card projects-card">
-                <h3>Projects</h3>
-                <div class="projects-grid" id="projects-grid"></div>
-            </div>
-
-        </div>
+    <!-- ============ BACKGROUND ============ -->
+    <div id="background-container">
+        <video id="bg-video" muted loop playsinline></video>
+        <img id="bg-gif" alt="">
+        <canvas id="bg-stranger-things"></canvas>
+        <div class="bg-overlay"></div>
     </div>
 
-    <!-- Обновленный Плеер -->
-    <div class="player-wrapper">
-        <!-- Кнопка развертывания (появляется при наведении) -->
-        <button id="expand-btn" class="expand-btn hidden">
-            <i class="fa-solid fa-chevron-up"></i>
+    <!-- ============ MAIN CONTENT ============ -->
+    <main id="main-content" class="hidden">
+        <div class="container">
+
+            <!-- ===== BIO SECTION ===== -->
+            <section id="bio-section" class="bento-section fade-in-up">
+                <div class="bento-grid bio-grid">
+                    <!-- Avatar Card -->
+                    <div class="bento-card bio-avatar-card" data-tilt>
+                        <div class="avatar-wrapper">
+                            <img id="bio-avatar" src="" alt="Avatar">
+                            <div class="avatar-ring"></div>
+                            <div class="avatar-status"></div>
+                        </div>
+                        <h1 id="bio-name" class="bio-name"></h1>
+                        <p id="bio-username" class="bio-username"></p>
+                    </div>
+
+                    <!-- Info Card -->
+                    <div class="bento-card bio-info-card" data-tilt>
+                        <div class="card-header">
+                            <i class="fas fa-user-astronaut"></i>
+                            <span>Обо мне</span>
+                        </div>
+                        <p id="bio-about" class="bio-about">
+                            <!-- ===== EDIT YOUR BIO HERE ===== -->
+                            Увлечённый разработчик, который любит создавать красивые и функциональные вещи. Исследую новые технологии, пишу чистый код и верю, что хороший дизайн решает всё. 🚀
+                            <!-- ================================ -->
+                        </p>
+                    </div>
+
+                    <!-- Location Card -->
+                    <div class="bento-card bio-location-card" data-tilt>
+                        <div class="card-header">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Локация</span>
+                        </div>
+                        <div class="location-content">
+                            <span class="flag-emoji">🇷🇺</span>
+                            <span class="location-text">Russia</span>
+                        </div>
+                    </div>
+
+                    <!-- Socials Card -->
+                    <div class="bento-card bio-socials-card" data-tilt>
+                        <div class="card-header">
+                            <i class="fas fa-share-alt"></i>
+                            <span>Соц. сети</span>
+                        </div>
+                        <div class="socials-list">
+                            <a href="#" id="social-telegram" class="social-link telegram" target="_blank" rel="noopener">
+                                <i class="fab fa-telegram"></i>
+                                <span>Telegram</span>
+                            </a>
+                            <a href="#" id="social-discord" class="social-link discord" target="_blank" rel="noopener">
+                                <i class="fab fa-discord"></i>
+                                <span>Discord</span>
+                            </a>
+                            <a href="https://github.com/loyslow-dev" id="social-github" class="social-link github" target="_blank" rel="noopener">
+                                <i class="fab fa-github"></i>
+                                <span>GitHub</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Stats Card -->
+                    <div class="bento-card bio-stats-card" data-tilt>
+                        <div class="card-header">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>GitHub Stats</span>
+                        </div>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <span class="stat-number" id="stat-repos">0</span>
+                                <span class="stat-label">Repos</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="stat-followers">0</span>
+                                <span class="stat-label">Followers</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="stat-following">0</span>
+                                <span class="stat-label">Following</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== TECH SECTION ===== -->
+            <section id="tech-section" class="bento-section fade-in-up">
+                <div class="section-header">
+                    <h2><i class="fas fa-code"></i> Технологии</h2>
+                    <p>Инструменты и языки, с которыми я работаю</p>
+                </div>
+                <div class="tech-marquee-wrapper">
+                    <div class="tech-marquee" id="tech-marquee">
+                        <!-- Filled by JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- ===== REPOS SECTION ===== -->
+            <section id="repos-section" class="bento-section fade-in-up">
+                <div class="section-header">
+                    <h2><i class="fas fa-book"></i> Репозитории</h2>
+                    <p>Мои публичные проекты на GitHub</p>
+                </div>
+                <div class="bento-grid repos-grid" id="repos-grid">
+                    <!-- Filled by JS -->
+                </div>
+            </section>
+
+            <!-- ===== PROJECTS SECTION ===== -->
+            <section id="projects-section" class="bento-section fade-in-up">
+                <div class="section-header">
+                    <h2><i class="fas fa-rocket"></i> Проекты</h2>
+                    <p>Проекты, в которых я принимаю участие</p>
+                </div>
+                <div class="bento-grid projects-grid" id="projects-grid">
+                    <!-- Filled by JS -->
+                </div>
+            </section>
+
+            <!-- ===== FOOTER ===== -->
+            <footer class="site-footer fade-in-up">
+                <div class="footer-content">
+                    <p>Made with <span class="heart">❤️</span> by <strong>loyslow</strong></p>
+                    <p class="footer-year"></p>
+                </div>
+            </footer>
+
+        </div>
+    </main>
+
+    <!-- ============ MUSIC PLAYER ============ -->
+    <div id="player-mini" class="player-mini">
+        <button id="player-toggle-btn" class="player-toggle-btn" title="Play/Pause">
+            <i class="fas fa-music"></i>
         </button>
+        <div class="player-mini-visualizer" id="mini-visualizer"></div>
+        <div class="player-expand-hint" id="player-expand-hint">
+            <i class="fas fa-chevron-up"></i>
+        </div>
+    </div>
 
-        <div class="music-player collapsed" id="music-player">
-            <!-- Мини-контроль (виден когда свернут) -->
-            <div class="mini-controls">
-                <button id="mini-play-btn"><i class="fa-solid fa-play"></i></button>
+    <div id="player-full" class="player-full">
+        <div class="player-full-inner">
+            <button id="player-close-btn" class="player-close-btn">
+                <i class="fas fa-chevron-down"></i>
+            </button>
+
+            <div class="player-visualizer-container">
+                <canvas id="player-visualizer" width="400" height="100"></canvas>
             </div>
 
-            <!-- Полный интерфейс -->
-            <div class="full-player">
-                <div class="visualizer-container">
-                    <canvas id="visualizer"></canvas>
-                </div>
-                <div class="track-info">
-                    <h4 id="track-name">No Music</h4>
-                    <p id="track-artist">Select Track</p>
-                </div>
-                <div class="timeline-container">
-                    <span id="current-time">0:00</span>
-                    <input type="range" id="seek-slider" max="100" value="0">
-                    <span id="duration">0:00</span>
-                </div>
-                <div class="main-controls">
-                    <button id="prev-btn"><i class="fa-solid fa-backward"></i></button>
-                    <button id="play-btn" class="big-play"><i class="fa-solid fa-play"></i></button>
-                    <button id="next-btn"><i class="fa-solid fa-forward"></i></button>
-                </div>
+            <div class="player-track-info">
+                <div class="player-track-name" id="player-track-name">Загрузка...</div>
+                <div class="player-track-artist" id="player-track-artist">—</div>
+            </div>
+
+            <div class="player-timeline">
+                <span id="player-current-time">0:00</span>
+                <input type="range" id="player-seek" class="player-seek" min="0" max="100" value="0">
+                <span id="player-duration">0:00</span>
+            </div>
+
+            <div class="player-controls">
+                <button id="player-prev" class="player-ctrl-btn" title="Previous">
+                    <i class="fas fa-backward-step"></i>
+                </button>
+                <button id="player-play" class="player-ctrl-btn play-btn" title="Play/Pause">
+                    <i class="fas fa-play" id="player-play-icon"></i>
+                </button>
+                <button id="player-next" class="player-ctrl-btn" title="Next">
+                    <i class="fas fa-forward-step"></i>
+                </button>
+            </div>
+
+            <div class="player-volume">
+                <i class="fas fa-volume-up" id="player-volume-icon"></i>
+                <input type="range" id="player-volume" class="player-volume-slider" min="0" max="100" value="50">
+            </div>
+
+            <div class="player-playlist" id="player-playlist">
+                <!-- Filled by JS -->
             </div>
         </div>
     </div>
 
-    <script src="config.js"></script>
-    <script src="script.js"></script>
+    <!-- ============ KONAMI EASTER EGG ============ -->
+    <div id="easter-egg-overlay" class="easter-egg-overlay hidden">
+        <div class="easter-egg-content">
+            <h2>🎮 Konami Code Activated!</h2>
+            <p>Ты нашёл пасхалку! Ты — настоящий гик 🤓</p>
+            <button id="easter-egg-close">Круто!</button>
+        </div>
+    </div>
+
+    <!-- JS Modules -->
+    <script src="js/background.js"></script>
+    <script src="js/bio.js"></script>
+    <script src="js/tech.js"></script>
+    <script src="js/repos.js"></script>
+    <script src="js/projects.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/easter-eggs.js"></script>
+    <script src="js/preloader.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>

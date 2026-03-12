@@ -1,0 +1,138 @@
+/* ============================================
+   TECH MARQUEE STYLES
+   ============================================ */
+
+.tech-marquee-wrapper {
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 20px 0;
+    position: relative;
+    backdrop-filter: blur(20px);
+}
+
+.tech-marquee-wrapper::before,
+.tech-marquee-wrapper::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 80px;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.tech-marquee-wrapper::before {
+    left: 0;
+    background: linear-gradient(90deg, var(--bg-card), transparent);
+}
+
+.tech-marquee-wrapper::after {
+    right: 0;
+    background: linear-gradient(-90deg, var(--bg-card), transparent);
+}
+
+.tech-marquee {
+    display: flex;
+    gap: 0;
+    animation: marqueeScroll 30s linear infinite;
+    width: max-content;
+}
+
+.tech-marquee:hover {
+    animation-play-state: paused;
+}
+
+@keyframes marqueeScroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+.tech-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 16px 28px;
+    min-width: 100px;
+    cursor: default;
+    transition: all var(--transition-normal);
+}
+
+.tech-item i {
+    font-size: 2.4rem;
+    transition: all var(--transition-normal);
+    filter: grayscale(100%) brightness(0.6);
+}
+
+.tech-item:hover i {
+    filter: grayscale(0%) brightness(1);
+    transform: scale(1.2) translateY(-4px);
+}
+
+.tech-item span {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+    transition: color var(--transition-normal);
+    white-space: nowrap;
+}
+
+.tech-item:hover span {
+    color: var(--text-primary);
+}
+
+/* Icon colors on hover (through colored class) */
+.tech-item:hover .devicon-html5-plain,
+.tech-item:hover .devicon-html5-plain-wordmark { color: #e34f26; }
+
+.tech-item:hover .devicon-css3-plain,
+.tech-item:hover .devicon-css3-plain-wordmark { color: #1572b6; }
+
+.tech-item:hover .devicon-javascript-plain { color: #f7df1e; }
+
+.tech-item:hover .devicon-python-plain { color: #3776ab; }
+
+.tech-item:hover .devicon-java-plain { color: #ed8b00; }
+
+.tech-item:hover .devicon-git-plain { color: #f05032; }
+
+.tech-item:hover .devicon-docker-plain { color: #2496ed; }
+
+.tech-item:hover .devicon-ubuntu-plain { color: #e95420; }
+
+.tech-item:hover .devicon-react-original { color: #61dafb; }
+
+.tech-item:hover .devicon-nodejs-plain { color: #339933; }
+
+.tech-item:hover .devicon-typescript-plain { color: #3178c6; }
+
+.tech-item:hover .devicon-mongodb-plain { color: #47a248; }
+
+.tech-item:hover .devicon-postgresql-plain { color: #4169e1; }
+
+.tech-item:hover .devicon-linux-plain { color: #fcc624; }
+
+.tech-item:hover .devicon-nginx-original { color: #009639; }
+
+.tech-item:hover .devicon-redis-plain { color: #dc382d; }
+
+.tech-item:hover .devicon-bash-plain { color: #4eaa25; }
+
+.tech-item:hover .devicon-vscode-plain { color: #007acc; }
+
+.tech-item:hover .fa-brands.fa-html5 { color: #e34f26; }
+.tech-item:hover .fa-brands.fa-css3-alt { color: #1572b6; }
+.tech-item:hover .fa-brands.fa-js { color: #f7df1e; }
+.tech-item:hover .fa-brands.fa-python { color: #3776ab; }
+.tech-item:hover .fa-brands.fa-java { color: #ed8b00; }
+.tech-item:hover .fa-brands.fa-git-alt { color: #f05032; }
+.tech-item:hover .fa-brands.fa-docker { color: #2496ed; }
+.tech-item:hover .fa-brands.fa-ubuntu { color: #e95420; }
+.tech-item:hover .fa-brands.fa-react { color: #61dafb; }
+.tech-item:hover .fa-brands.fa-node-js { color: #339933; }
+.tech-item:hover .fa-brands.fa-linux { color: #fcc624; }

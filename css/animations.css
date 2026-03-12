@@ -1,0 +1,75 @@
+/* ============================================
+   GLOBAL ANIMATIONS
+   ============================================ */
+
+/* Fade in up - intersection observer trigger */
+.fade-in-up {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fade-in-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Stagger children */
+.fade-in-up.visible .bento-card:nth-child(1) { transition-delay: 0.05s; }
+.fade-in-up.visible .bento-card:nth-child(2) { transition-delay: 0.1s; }
+.fade-in-up.visible .bento-card:nth-child(3) { transition-delay: 0.15s; }
+.fade-in-up.visible .bento-card:nth-child(4) { transition-delay: 0.2s; }
+.fade-in-up.visible .bento-card:nth-child(5) { transition-delay: 0.25s; }
+.fade-in-up.visible .bento-card:nth-child(6) { transition-delay: 0.3s; }
+.fade-in-up.visible .bento-card:nth-child(7) { transition-delay: 0.35s; }
+.fade-in-up.visible .bento-card:nth-child(8) { transition-delay: 0.4s; }
+
+/* Card tilt hover effect (subtle) */
+[data-tilt] {
+    transition: transform var(--transition-normal);
+}
+
+/* Typing cursor */
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+.typing-cursor::after {
+    content: '|';
+    animation: blink 1s infinite;
+    color: var(--accent-primary);
+}
+
+/* Float animation */
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Glow pulse */
+@keyframes glowPulse {
+    0%, 100% { box-shadow: 0 0 5px var(--accent-glow); }
+    50% { box-shadow: 0 0 25px var(--accent-glow), 0 0 50px var(--accent-glow); }
+}
+
+/* Rotate */
+@keyframes rotateInfinity {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Scale in */
+@keyframes scaleIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* Slide in from right */
+@keyframes slideInRight {
+    from { transform: translateX(30px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+/* Number count animation handled in JS */
