@@ -200,15 +200,22 @@ function renderProjects() {
     });
 }
 
-/* --- 5. Music Player --- */
+/* --- 5. Music Player (Fixed & Robust) --- */
 function initMusicPlayer() {
-    if (!CONFIG.playlist || CONFIG.playlist.length === 0) return;
+    // 1. Проверка наличия песен в конфиге
+    if (!CONFIG.playlist || CONFIG.playlist.length === 0) {
+        console.warn("Music Player: Playlist is empty in config.js");
+        document.getElementById('music-player').style.display = 'none'; // Скрываем плеер
+        return;
+    }
 
     const player = document.getElementById('music-player');
     const audio = new Audio();
+    audio.volume = 0.5; // Громкость 50% по умолчанию
+
     let index = 0;
     let isPlaying = false;
-    let ctx, analyser, canvas, canvasCtx;
+    let ctx, analyser, canvas, canvasCtx, animationId;
 
     // Elements
     const els = {
@@ -224,53 +231,95 @@ function initMusicPlayer() {
         dur: document.getElementById('duration')
     };
 
+    // --- Core Functions ---
+
     function loadTrack(i) {
         const track = CONFIG.playlist[i];
         if(!track) return;
-        audio.src = `songs/${track.filename}`;
+        
+        // Важно: путь к файлу. Убедись, что папка называется songs (маленькими буквами)
+        const src = `songs/${track.filename}`;
+        
+        console.log(`Music Player: Loading track "${track.title}" from ${src}`);
+        audio.src = src;
+        
         els.title.innerText = track.title;
         els.artist.innerText = track.artist;
-        // Сбрасываем слайдер
         els.slider.value = 0;
+        
+        // Обработка ошибки загрузки файла
+        audio.onerror = () => {
+            console.error(`Music Player Error: Could not load file: ${src}. Check filename and folder!`);
+            els.title.innerText = "Error Loading";
+            els.artist.innerText = "Check Console (F12)";
+        };
+    }
+
+    function playMusic() {
+        // Пытаемся запустить
+        const playPromise = audio.play();
+
+        if (playPromise !== undefined) {
+            playPromise.then(() => {
+                // Успех
+                isPlaying = true;
+                updateIcons(true);
+                if(!ctx) setupVisualizer();
+            })
+            .catch(error => {
+                // Блокировка браузера
+                console.log("Autoplay prevented by browser. Waiting for user interaction...");
+                isPlaying = false;
+                updateIcons(false);
+                
+                // Ждем любого клика по сайту, чтобы запустить музыку
+                document.addEventListener('click', unlockAudio, { once: true });
+            });
+        }
+    }
+
+    function pauseMusic() {
+        audio.pause();
+        isPlaying = false;
+        updateIcons(false);
+    }
+
+    function unlockAudio() {
+        console.log("User interacted. Starting music...");
+        playMusic();
     }
 
     function togglePlay() {
-        if(!ctx) setupVisualizer();
-        
-        if (isPlaying) {
-            audio.pause();
-            updateIcons(false);
-        } else {
-            audio.play().catch(e => console.log("Autoplay blocked"));
-            updateIcons(true);
-        }
-        isPlaying = !isPlaying;
+        if (isPlaying) pauseMusic();
+        else playMusic();
     }
 
-    function updateIcons(play) {
-        const icon = play ? '<i class="fa-solid fa-pause"></i>' : '<i class="fa-solid fa-play"></i>';
+    function updateIcons(isPlay) {
+        const icon = isPlay ? '<i class="fa-solid fa-pause"></i>' : '<i class="fa-solid fa-play"></i>';
         els.play.innerHTML = icon;
         els.miniPlay.innerHTML = icon;
     }
 
-    // Слушатели
+    // --- Event Listeners ---
+
     els.play.onclick = togglePlay;
     els.miniPlay.onclick = (e) => { e.stopPropagation(); togglePlay(); };
     
     els.next.onclick = () => {
         index = (index + 1) % CONFIG.playlist.length;
         loadTrack(index);
-        if(isPlaying) audio.play();
+        playMusic();
     };
+    
     els.prev.onclick = () => {
         index = (index - 1 + CONFIG.playlist.length) % CONFIG.playlist.length;
         loadTrack(index);
-        if(isPlaying) audio.play();
+        playMusic();
     };
 
-    audio.onended = els.next.onclick;
+    audio.onended = () => els.next.onclick();
 
-    // Timeline
+    // Timeline Update
     audio.ontimeupdate = () => {
         if(audio.duration) {
             const pct = (audio.currentTime / audio.duration) * 100;
@@ -285,22 +334,25 @@ function initMusicPlayer() {
         audio.currentTime = time;
     };
 
-    // Сворачивание/Разворачивание
-    player.onclick = () => {
-        if(player.classList.contains('collapsed')) {
-            player.classList.remove('collapsed');
-            els.toggle.innerHTML = '<i class="fa-solid fa-chevron-down"></i>';
-        }
-    };
+    // Toggle Player View
+    const playerContainer = document.getElementById('music-player');
     
+    // Клик на кнопку сворачивания
     els.toggle.onclick = (e) => {
         e.stopPropagation();
-        player.classList.add('collapsed');
+        playerContainer.classList.add('collapsed');
         els.toggle.innerHTML = '<i class="fa-solid fa-chevron-up"></i>';
     };
 
-    // Инициализация
-    loadTrack(index);
+    // Клик на сам плеер (если свернут) -> развернуть
+    playerContainer.onclick = (e) => {
+        if(playerContainer.classList.contains('collapsed')) {
+            playerContainer.classList.remove('collapsed');
+            els.toggle.innerHTML = '<i class="fa-solid fa-chevron-down"></i>';
+        }
+    };
+
+    // --- Helpers ---
 
     function fmtTime(s) {
         const m = Math.floor(s / 60);
@@ -308,37 +360,51 @@ function initMusicPlayer() {
         return `${m}:${sec < 10 ? '0'+sec : sec}`;
     }
 
+    // --- Visualizer ---
     function setupVisualizer() {
-        ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const src = ctx.createMediaElementSource(audio);
-        analyser = ctx.createAnalyser();
-        src.connect(analyser);
-        analyser.connect(ctx.destination);
-        analyser.fftSize = 64;
-        
-        canvas = document.getElementById('visualizer');
-        canvasCtx = canvas.getContext('2d');
-        const bufferLength = analyser.frequencyBinCount;
-        const dataArray = new Uint8Array(bufferLength);
+        try {
+            if (!window.AudioContext && !window.webkitAudioContext) return;
+            ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const src = ctx.createMediaElementSource(audio);
+            analyser = ctx.createAnalyser();
+            src.connect(analyser);
+            analyser.connect(ctx.destination);
+            analyser.fftSize = 64;
+            
+            canvas = document.getElementById('visualizer');
+            canvasCtx = canvas.getContext('2d');
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
 
-        function draw() {
-            if(player.classList.contains('collapsed')) {
-                requestAnimationFrame(draw); return;
+            function draw() {
+                animationId = requestAnimationFrame(draw);
+                // Экономим ресурсы, если плеер свернут
+                if(playerContainer.classList.contains('collapsed')) return;
+
+                analyser.getByteFrequencyData(dataArray);
+                canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                const barWidth = (canvas.width / bufferLength) * 2.5;
+                let barHeight, x = 0;
+                
+                for(let i = 0; i < bufferLength; i++) {
+                    barHeight = dataArray[i] / 2;
+                    canvasCtx.fillStyle = `rgb(${barHeight + 100}, 80, 220)`;
+                    canvasCtx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+                    x += barWidth + 1;
+                }
             }
-            requestAnimationFrame(draw);
-            analyser.getByteFrequencyData(dataArray);
-            canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            const barWidth = (canvas.width / bufferLength) * 2.5;
-            let barHeight, x = 0;
-            
-            for(let i = 0; i < bufferLength; i++) {
-                barHeight = dataArray[i] / 2;
-                canvasCtx.fillStyle = `rgb(${barHeight + 100}, 80, 220)`;
-                canvasCtx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
-                x += barWidth + 1;
-            }
+            draw();
+        } catch(e) {
+            console.warn("Visualizer failed to init (CORS policy mostly):", e);
         }
-        draw();
     }
+
+    // --- Start ---
+    // Случайный трек при загрузке
+    index = Math.floor(Math.random() * CONFIG.playlist.length);
+    loadTrack(index);
+    
+    // Пытаемся запустить (скорее всего заблокируется, но сработает document.click fallback)
+    playMusic();
 }
