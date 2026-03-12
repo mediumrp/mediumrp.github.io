@@ -2,10 +2,10 @@
 
 :root {
     --bg-dark: #050505;
-    --card-bg: rgba(20, 20, 20, 0.4); /* Более прозрачный для визуала фона */
+    --card-bg: rgba(20, 20, 20, 0.6);
     --card-border: rgba(255, 255, 255, 0.08);
     --primary: #9d4edd;
-    --primary-glow: rgba(157, 78, 221, 0.5);
+    --primary-glow: rgba(157, 78, 221, 0.6);
     --text-main: #ffffff;
     --text-muted: #a0a0a0;
     --radius: 24px;
@@ -20,202 +20,165 @@ body {
     overflow-x: hidden;
 }
 
-/* Космический фон (Canvas) */
-#space-canvas {
+/* --- OVERLAY (Экран входа) --- */
+#overlay {
     position: fixed;
     top: 0; left: 0;
     width: 100%; height: 100%;
-    z-index: -2;
-    background: radial-gradient(circle at bottom, #1a0b2e 0%, #000000 70%);
+    background: rgba(5, 5, 5, 0.95);
+    backdrop-filter: blur(15px);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: opacity 0.8s ease, visibility 0.8s;
 }
 
-/* Видео фон (по умолчанию скрыт, пока нет файла) */
-#bg-video {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    object-fit: cover;
-    z-index: -1;
-    opacity: 0.3;
-    display: none; /* Включится JS-ом если файл найдется (сложно проверить) или вручную */
+.overlay-content { text-align: center; }
+.overlay-content h1 { font-size: 2.5rem; margin: 10px 0; letter-spacing: 5px; color: var(--text-main); }
+.overlay-content p { color: var(--primary); text-transform: uppercase; letter-spacing: 2px; font-size: 0.9rem; animation: pulse 1.5s infinite; }
+
+.loader-ring {
+    width: 60px; height: 60px;
+    border: 4px solid rgba(255,255,255,0.1);
+    border-top: 4px solid var(--primary);
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+/* --- ФОН --- */
+#space-canvas {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2;
+    background: radial-gradient(circle at bottom, #1a0b2e 0%, #000000 80%);
 }
 
 .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 40px 20px 120px;
+    max-width: 1200px; margin: 0 auto; padding: 40px 20px 120px;
+    opacity: 0; transform: translateY(20px); transition: 1s ease; /* Скрыто до входа */
 }
 
-/* Bento Grid */
+/* --- BENTO GRID (Как и было) --- */
 .bento-grid {
     display: grid;
     grid-template-columns: 350px 1fr;
     gap: 20px;
-    grid-template-areas: 
-        "bio tech"
-        "bio repos"
-        "projects projects";
+    grid-template-areas: "bio tech" "bio repos" "projects projects";
 }
-
 @media (max-width: 900px) {
-    .bento-grid {
-        grid-template-columns: 1fr;
-        grid-template-areas: "bio" "tech" "repos" "projects";
-    }
+    .bento-grid { grid-template-columns: 1fr; grid-template-areas: "bio" "tech" "repos" "projects"; }
 }
 
 .card {
     background: var(--card-bg);
     backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
     border: 1px solid var(--card-border);
     border-radius: var(--radius);
     padding: 25px;
     transition: 0.3s ease;
-    position: relative;
-    overflow: hidden;
 }
+.card:hover { border-color: var(--primary); box-shadow: 0 0 30px -5px var(--primary-glow); transform: translateY(-3px); }
 
-.card:hover {
-    border-color: var(--primary);
-    box-shadow: 0 0 30px -5px var(--primary-glow);
-    transform: translateY(-3px);
-}
-
-h3 {
-    margin-bottom: 20px;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    color: var(--text-muted);
-    font-weight: 800;
-}
+h3 { margin-bottom: 20px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-muted); font-weight: 800; }
 
 /* BIO */
-.bio-card {
-    grid-area: bio;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 15px;
-}
-.avatar {
-    width: 140px; height: 140px;
-    border-radius: 50%;
-    border: 4px solid var(--primary);
-    box-shadow: 0 0 25px var(--primary-glow);
-    object-fit: cover;
-}
+.bio-card { grid-area: bio; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 15px; }
+.avatar { width: 140px; height: 140px; border-radius: 50%; border: 4px solid var(--primary); box-shadow: 0 0 25px var(--primary-glow); object-fit: cover; }
 .bio-name { font-size: 1.8rem; font-weight: 700; }
 .bio-loc { color: var(--text-muted); font-size: 0.9rem; }
-.socials { margin: 10px 0; }
-.socials a {
-    color: white; font-size: 1.5rem; margin: 0 10px;
-    transition: color 0.3s, transform 0.3s;
-    display: inline-block;
-}
+.socials a { color: white; font-size: 1.5rem; margin: 0 10px; transition: 0.3s; display: inline-block; }
 .socials a:hover { color: var(--primary); transform: scale(1.2); }
-.about-text {
-    background: rgba(255,255,255,0.03);
-    padding: 15px; border-radius: 12px;
-    text-align: left; font-size: 0.9rem; line-height: 1.6;
-    color: #ddd; width: 100%;
-}
+.about-text { background: rgba(255,255,255,0.03); padding: 15px; border-radius: 12px; text-align: left; font-size: 0.9rem; line-height: 1.6; color: #ddd; width: 100%; }
 
-/* TECH MARQUEE */
-.tech-card {
-    grid-area: tech;
-    display: flex; flex-direction: column; justify-content: center;
-    overflow: hidden;
-    padding: 20px 0; /* Убираем боковые отступы для ленты */
-}
+/* TECH */
+.tech-card { grid-area: tech; display: flex; flex-direction: column; justify-content: center; overflow: hidden; padding: 20px 0; }
 .tech-card h3 { margin-left: 25px; }
-
-.marquee-container {
-    width: 100%; overflow: hidden;
-    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-}
-.marquee {
-    display: flex; gap: 40px; width: max-content;
-    animation: scroll 25s linear infinite;
-    padding-left: 25px;
-}
+.marquee-container { width: 100%; overflow: hidden; mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent); }
+.marquee { display: flex; gap: 40px; width: max-content; animation: scroll 25s linear infinite; padding-left: 25px; }
 .marquee:hover { animation-play-state: paused; }
 @keyframes scroll { to { transform: translateX(-50%); } }
-
-/* Стили для SVG иконок */
-.tech-icon {
-    height: 50px; width: auto;
-    filter: grayscale(100%) opacity(0.6);
-    transition: 0.3s;
-}
-/* Стили для FontAwesome иконок (если SVG нет) */
-.tech-icon-font {
-    font-size: 50px;
-    color: #555;
-    transition: 0.3s;
-}
-
-.marquee:hover .tech-icon { filter: grayscale(0) opacity(1); transform: scale(1.1); }
+.tech-icon-font { font-size: 50px; color: #555; transition: 0.3s; }
 .marquee:hover .tech-icon-font { color: var(--text-main); transform: scale(1.1); text-shadow: 0 0 10px white; }
 
-/* REPOS */
+/* REPOS & PROJECTS */
 .repos-card { grid-area: repos; min-height: 300px; }
-.repos-list {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 15px; max-height: 350px; overflow-y: auto; padding-right: 5px;
-}
-.repo-item {
-    background: rgba(255,255,255,0.03);
-    padding: 15px; border-radius: 12px;
-    text-decoration: none; color: white;
-    transition: 0.3s; border: 1px solid transparent;
-}
-.repo-item:hover { background: rgba(255,255,255,0.08); border-color: var(--primary); }
+.repos-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; max-height: 350px; overflow-y: auto; padding-right: 5px; }
+.repo-item { background: rgba(255,255,255,0.03); padding: 15px; border-radius: 12px; text-decoration: none; color: white; transition: 0.3s; border: 1px solid transparent; }
+.repo-item:hover { border-color: var(--primary); }
 .repo-name { font-weight: 700; color: var(--primary); display: block; margin-bottom: 5px; }
 .repo-desc { font-size: 0.8rem; color: #aaa; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.repo-meta { font-size: 0.75rem; margin-top: 8px; color: #666; display: flex; gap: 10px; }
-
-/* PROJECTS */
 .projects-card { grid-area: projects; }
-.projects-grid {
-    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;
-}
-.project-item {
-    background: rgba(0,0,0,0.3); padding: 20px; border-radius: 16px;
-    text-decoration: none; color: white; transition: 0.3s; display: block;
-    border: 1px solid transparent;
-}
+.projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+.project-item { background: rgba(0,0,0,0.3); padding: 20px; border-radius: 16px; text-decoration: none; color: white; transition: 0.3s; display: block; border: 1px solid transparent; }
 .project-item:hover { transform: translateY(-5px); border-color: var(--primary); }
 .project-top { display: flex; align-items: center; gap: 15px; margin-bottom: 12px; }
 .project-img { width: 45px; height: 45px; border-radius: 8px; background: #333; object-fit: cover; }
-.project-role { font-size: 0.7rem; color: var(--primary); text-transform: uppercase; font-weight: 800; border: 1px solid var(--primary); padding: 2px 6px; border-radius: 4px; }
-.project-desc { font-size: 0.9rem; color: #bbb; line-height: 1.4; }
 
-/* PLAYER */
+/* --- ОБНОВЛЕННЫЙ ПЛЕЕР --- */
+.player-wrapper {
+    position: fixed;
+    bottom: 30px; right: 30px;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Кнопка-стрелочка (сверху) */
+.expand-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    margin-bottom: 10px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: 0.3s ease;
+    box-shadow: 0 0 15px var(--primary-glow);
+    display: flex; align-items: center; justify-content: center;
+}
+
+/* Показываем стрелочку при наведении на WRAPPER */
+.player-wrapper:hover .expand-btn.hidden {
+    opacity: 1;
+    transform: translateY(0);
+}
+/* Если плеер развернут, кнопка всегда видна и повернута */
+.expand-btn.active {
+    opacity: 1;
+    transform: rotate(180deg);
+    background: rgba(255,255,255,0.1);
+    margin-bottom: -15px; /* Немного наезжает на плеер для стиля */
+    z-index: 102;
+    position: relative;
+}
+
 .music-player {
-    position: fixed; bottom: 30px; right: 30px;
     background: rgba(10, 10, 10, 0.95);
     border: 1px solid rgba(255,255,255,0.1);
     backdrop-filter: blur(20px);
-    border-radius: 20px; padding: 20px;
-    width: 320px; z-index: 100;
+    border-radius: 20px;
+    padding: 20px;
+    width: 320px;
     transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    position: relative;
 }
+
+/* Свернутое состояние */
 .music-player.collapsed {
-    width: 60px; height: 60px; padding: 0;
-    border-radius: 50%; cursor: pointer;
+    width: 60px; height: 60px;
+    padding: 0;
+    border-radius: 50%;
 }
-.music-player.collapsed:hover { transform: scale(1.1); border-color: var(--primary); }
-.music-player.collapsed .full-player, .music-player.collapsed .toggle-player-btn { 
-    opacity: 0; pointer-events: none; 
-}
-.toggle-player-btn {
-    position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
-    background: none; border: none; color: #666; cursor: pointer;
-}
+
+.music-player.collapsed .full-player { opacity: 0; pointer-events: none; }
 .mini-controls {
     display: none; width: 100%; height: 100%;
     align-items: center; justify-content: center;
@@ -224,10 +187,17 @@ h3 {
 #mini-play-btn { background: none; border: none; color: var(--primary); font-size: 1.5rem; cursor: pointer; }
 
 .full-player { opacity: 1; transition: 0.3s 0.3s; }
-.visualizer-container { height: 50px; width: 100%; display: flex; align-items: flex-end; margin-bottom: 10px; }
+
+/* Красивый визуализатор */
+.visualizer-container { 
+    height: 60px; width: 100%; 
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 15px; 
+}
 #visualizer { width: 100%; height: 100%; }
+
 .track-info { text-align: center; margin-bottom: 15px; }
-.track-info h4 { margin: 0; font-size: 1rem; color: white; }
+.track-info h4 { margin: 0; font-size: 1rem; color: white; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 .track-info p { margin: 5px 0 0; font-size: 0.8rem; color: var(--primary); }
 
 .timeline-container { display: flex; align-items: center; gap: 10px; font-size: 0.7rem; color: #666; margin-bottom: 15px; }

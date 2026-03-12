@@ -9,15 +9,17 @@
 </head>
 <body>
 
-    <!-- Генеративный космический фон (работает всегда) -->
+    <!-- Экран входа (Overlay) -->
+    <div id="overlay">
+        <div class="overlay-content">
+            <div class="loader-ring"></div>
+            <h1>SYSTEM LOCKED</h1>
+            <p>Click to Initialize</p>
+        </div>
+    </div>
+
+    <!-- Фон -->
     <canvas id="space-canvas"></canvas>
-    
-    <!-- Видео фон. РАСКОММЕНТИРУЙ ТОЛЬКО ЕСЛИ ЗАГРУЗИЛ ФАЙЛ assets/background.mp4 -->
-    <!-- 
-    <video muted loop id="bg-video" autoplay playsinline>
-        <source src="assets/background.mp4" type="video/mp4">
-    </video> 
-    -->
 
     <div class="container">
         <div class="bento-grid">
@@ -27,7 +29,7 @@
                 <div class="loader"><i class="fa-solid fa-circle-notch fa-spin"></i> Loading Bio...</div>
             </div>
 
-            <!-- Лента технологий -->
+            <!-- Stack -->
             <div class="card tech-card">
                 <h3>Stack</h3>
                 <div class="marquee-container">
@@ -35,7 +37,7 @@
                 </div>
             </div>
 
-            <!-- Репозитории -->
+            <!-- Repos -->
             <div class="card repos-card">
                 <h3>GitHub Repositories</h3>
                 <div class="repos-list" id="repos-list">
@@ -43,7 +45,7 @@
                 </div>
             </div>
 
-            <!-- Проекты -->
+            <!-- Projects -->
             <div class="card projects-card">
                 <h3>Projects</h3>
                 <div class="projects-grid" id="projects-grid"></div>
@@ -52,38 +54,42 @@
         </div>
     </div>
 
-    <!-- Плеер -->
-    <div class="music-player collapsed" id="music-player">
-        <button class="toggle-player-btn" id="toggle-player">
+    <!-- Обновленный Плеер -->
+    <div class="player-wrapper">
+        <!-- Кнопка развертывания (появляется при наведении) -->
+        <button id="expand-btn" class="expand-btn hidden">
             <i class="fa-solid fa-chevron-up"></i>
         </button>
 
-        <div class="mini-controls">
-            <button id="mini-play-btn"><i class="fa-solid fa-play"></i></button>
-        </div>
+        <div class="music-player collapsed" id="music-player">
+            <!-- Мини-контроль (виден когда свернут) -->
+            <div class="mini-controls">
+                <button id="mini-play-btn"><i class="fa-solid fa-play"></i></button>
+            </div>
 
-        <div class="full-player">
-            <div class="visualizer-container">
-                <canvas id="visualizer"></canvas>
-            </div>
-            <div class="track-info">
-                <h4 id="track-name">No Music</h4>
-                <p id="track-artist">Add mp3 to config</p>
-            </div>
-            <div class="timeline-container">
-                <span id="current-time">0:00</span>
-                <input type="range" id="seek-slider" max="100" value="0">
-                <span id="duration">0:00</span>
-            </div>
-            <div class="main-controls">
-                <button id="prev-btn"><i class="fa-solid fa-backward"></i></button>
-                <button id="play-btn" class="big-play"><i class="fa-solid fa-play"></i></button>
-                <button id="next-btn"><i class="fa-solid fa-forward"></i></button>
+            <!-- Полный интерфейс -->
+            <div class="full-player">
+                <div class="visualizer-container">
+                    <canvas id="visualizer"></canvas>
+                </div>
+                <div class="track-info">
+                    <h4 id="track-name">No Music</h4>
+                    <p id="track-artist">Select Track</p>
+                </div>
+                <div class="timeline-container">
+                    <span id="current-time">0:00</span>
+                    <input type="range" id="seek-slider" max="100" value="0">
+                    <span id="duration">0:00</span>
+                </div>
+                <div class="main-controls">
+                    <button id="prev-btn"><i class="fa-solid fa-backward"></i></button>
+                    <button id="play-btn" class="big-play"><i class="fa-solid fa-play"></i></button>
+                    <button id="next-btn"><i class="fa-solid fa-forward"></i></button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- ВАЖНО: Сначала конфиг, потом скрипт -->
     <script src="config.js"></script>
     <script src="script.js"></script>
 </body>
