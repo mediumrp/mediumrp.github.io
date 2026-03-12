@@ -20,13 +20,16 @@ const CONFIG = {
     
     technologies: [
         // Если useIcons: true, пиши классы FontAwesome:
-        "fa-brands fa-java"
         "fa-brands fa-html5",
         "fa-brands fa-css3-alt",
         "fa-brands fa-js",
+        "fa-brands fa-react",
         "fa-brands fa-node",
         "fa-brands fa-python",
         "fa-brands fa-docker",
+        "fa-brands fa-git-alt",
+        // Если useIcons: false, пиши имена файлов (без .svg):
+        // "html", "css", "js"
     ],
 
     projects: [
