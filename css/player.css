@@ -107,8 +107,8 @@
     position: fixed;
     bottom: 80px;
     right: 20px;
-    width: 380px;
-    max-height: 520px;
+    width: 400px;
+    max-height: 580px;
     background: var(--bg-secondary);
     border: 1px solid var(--border-color);
     border-radius: var(--radius-xl);
@@ -150,6 +150,46 @@
     color: var(--text-primary);
 }
 
+/* ===== Track Cover Art ===== */
+.player-cover-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 4px;
+}
+
+.player-cover {
+    width: 140px;
+    height: 140px;
+    border-radius: var(--radius-lg);
+    object-fit: cover;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    transition: transform var(--transition-normal);
+    background: var(--bg-glass);
+}
+
+.player-cover.spinning {
+    animation: coverSpin 12s linear infinite;
+}
+
+.player-cover-placeholder {
+    width: 140px;
+    height: 140px;
+    border-radius: var(--radius-lg);
+    background: var(--accent-gradient);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes coverSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
 /* Visualizer */
 .player-visualizer-container {
     border-radius: var(--radius-md);
@@ -160,7 +200,7 @@
 
 #player-visualizer {
     width: 100%;
-    height: 80px;
+    height: 60px;
     display: block;
 }
 
@@ -170,7 +210,7 @@
 }
 
 .player-track-name {
-    font-size: 1rem;
+    font-size: 1.05rem;
     font-weight: 600;
     color: var(--text-primary);
     white-space: nowrap;
@@ -179,9 +219,12 @@
 }
 
 .player-track-artist {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     color: var(--text-secondary);
-    margin-top: 2px;
+    margin-top: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* Timeline */
@@ -223,6 +266,16 @@
 
 .player-seek::-webkit-slider-thumb:hover {
     transform: scale(1.2);
+}
+
+.player-seek::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--accent-primary);
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 0 10px var(--accent-glow);
 }
 
 /* Controls */
@@ -279,6 +332,11 @@
     color: var(--text-muted);
     font-size: 0.85rem;
     cursor: pointer;
+    transition: color var(--transition-fast);
+}
+
+.player-volume i:hover {
+    color: var(--text-primary);
 }
 
 .player-volume-slider {
@@ -301,9 +359,18 @@
     cursor: pointer;
 }
 
+.player-volume-slider::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent-secondary);
+    cursor: pointer;
+    border: none;
+}
+
 /* Playlist */
 .player-playlist {
-    max-height: 120px;
+    max-height: 140px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
@@ -341,23 +408,62 @@
     color: var(--accent-secondary);
 }
 
+.playlist-item .playlist-cover-mini {
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.playlist-item .playlist-cover-mini-placeholder {
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    background: var(--bg-glass);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
 .playlist-item .playlist-num {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.7rem;
     color: var(--text-muted);
-    width: 20px;
+    width: 16px;
     text-align: center;
+    flex-shrink: 0;
+}
+
+.playlist-item .playlist-info {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
 }
 
 .playlist-item .playlist-title {
-    flex: 1;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-size: 0.8rem;
+}
+
+.playlist-item .playlist-artist {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.65rem;
+    color: var(--text-muted);
 }
 
 .playlist-item .playlist-playing-icon {
     display: none;
+    flex-shrink: 0;
 }
 
 .playlist-item.active .playlist-playing-icon {
@@ -388,5 +494,16 @@
         left: 10px;
         width: auto;
         bottom: 76px;
+    }
+
+    .player-cover {
+        width: 100px;
+        height: 100px;
+    }
+
+    .player-cover-placeholder {
+        width: 100px;
+        height: 100px;
+        font-size: 2rem;
     }
 }
