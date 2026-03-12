@@ -19,13 +19,14 @@ const CONFIG = {
     useIcons: true, // true = иконки FontAwesome, false = твои SVG файлы
     
     technologies: [
-        "fa-brands fa-java",
         "fa-brands fa-html5",
         "fa-brands fa-css3-alt",
         "fa-brands fa-js",
+        "fa-brands fa-react",
         "fa-brands fa-node",
         "fa-brands fa-python",
-        "fa-brands fa-docker"
+        "fa-brands fa-docker",
+        "fa-brands fa-git-alt"
     ], // <--- ВОТ ЗДЕСЬ ОБЫЧНО ЗАБЫВАЮТ ЗАПЯТУЮ!
 
     // 5. Проекты
@@ -49,6 +50,6 @@ const CONFIG = {
     // 6. Плейлист
     playlist: [
         // Файлы должны лежать в папке songs/
-        { filename: "song1.mp3", title: "Track Title", artist: "Artist" },
+        // { filename: "track1.mp3", title: "Track Title", artist: "Artist" },
     ]
 };
