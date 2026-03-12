@@ -34,6 +34,12 @@ const PlayerModule = (() => {
             artist: 'Kyle Dixon & Michael Stein',
             cover: 'songs/song3.jpg'    // Explicit cover path
         },
+        {
+            file: 'songs/song4.mp3',
+            title: 'The Upside Down',
+            artist: 'Kyle Dixon & Michael Stein',
+            cover: 'songs/song4.jpg'    // Explicit cover path
+        },
         // ===== ADD MORE SONGS =====
         // {
         //     file: 'songs/mysong.mp3',
